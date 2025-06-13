@@ -21,6 +21,7 @@ const LogIn = () => {
         userSignInWithGoogle()
             .then(result => {
                 alert('user successfull');
+                console.log(result);
 
             })
             .catch(error => {

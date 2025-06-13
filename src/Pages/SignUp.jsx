@@ -1,5 +1,6 @@
 import React from 'react';
 import useAuth from '../Hooks/useAuth';
+import axios from 'axios';
 
 const SignUp = () => {
     const { userSignUp, setUser, userUpdate, userSignInWithGoogle } = useAuth();
@@ -23,6 +24,13 @@ const SignUp = () => {
                 userUpdate(dataInfo)
                     .then(() => {
                         console.log('updateUser Succesfully');
+                        axios.post('http://localhost:3000/user', userData)
+                            .then(res => {
+                                console.log(res);
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            })
                     })
                     .catch(error => console.log(error));
             })
@@ -32,6 +40,7 @@ const SignUp = () => {
         userSignInWithGoogle()
             .then(result => {
                 alert('user successfull');
+                console.log(result);
 
             })
             .catch(error => {
