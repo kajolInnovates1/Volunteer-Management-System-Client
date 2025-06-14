@@ -6,6 +6,7 @@ import Layouts from "../MainLayouts/Layouts";
 import Home from "../Pages/Home";
 import SignUp from "../Pages/SignUp";
 import LogIn from "../Pages/LogIn";
+import AllVoluntierNeedPosts from "../Pages/AllVoluntierNeedPosts/AllVoluntierNeedPosts";
 
 
 export const router = createBrowserRouter([
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
             {
                 path: 'login',
                 Component: LogIn
+            },
+            {
+                path: '/allneedpost',
+                Component: AllVoluntierNeedPosts
             }
         ]
     },
