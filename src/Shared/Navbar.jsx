@@ -52,67 +52,84 @@ const Navbar = () => {
             })
 
     }
-    const Links = <>
-        <NavLink
-            to="/"
-            onClick={() => setShowDropdown(false)}
-
-            className={({ isActive }) => isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'}
-        >
-            <li>Home</li>
-        </NavLink>
-
-        <NavLink
-            to="/allneedpost"
-            onClick={() => setShowDropdown(false)}
-            className={({ isActive }) => isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'}
-        >
-            <li>All Voluntier Need Post</li>
-        </NavLink>
-
-        <NavLink
-            to="/addvoluntieer"
-            onClick={() => setShowDropdown(false)}
-            className={({ isActive }) => isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'}
-        >
-            <li>Add Need Voluntieer</li>
-        </NavLink>
-
-        {/* Dropdown Menu */}
-        <div className={`relative ${!showDropdown ? 'bg-green-600 text-white' : ''} hover:bg-green-600 hover:text-white rounded-2xl`}>
-            <button
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="px-3 py-2  rounded"
+    const Links = (
+        <>
+            <NavLink
+                to="/"
+                onClick={() => setShowDropdown(false)}
+                className={({ isActive }) =>
+                    isActive
+                        ? 'bg-green-600 text-white px-3 py-2 rounded'
+                        : 'px-3 py-2'
+                }
             >
-                Manage My Post ▾
-            </button>
-            {showDropdown && (
-                <ul className="absolute bg-white text-black shadow-md rounded mt-2 z-50 w-52">
-                    <li>
-                        <NavLink
-                            to="/my-need-posts"
-                            className="block px-4 py-2 hover:bg-green-600 hover:text-white"
-                            onClick={() => setShowDropdown(false)}
-                        >
-                            My Volunteer Need Post
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/my-request-posts"
-                            className="block px-4 py-2 hover:bg-green-600 hover:text-white"
-                            onClick={() => setShowDropdown(false)}
-                        >
-                            My Volunteer Request Post
-                        </NavLink>
-                    </li>
-                </ul>
+                <li>Home</li>
+            </NavLink>
 
+            <NavLink
+                to="/allneedpost"
+                onClick={() => setShowDropdown(false)}
+                className={({ isActive }) =>
+                    isActive
+                        ? 'bg-green-600 text-white px-3 py-2 rounded'
+                        : 'px-3 py-2'
+                }
+            >
+                <li>All Volunteer Need Post</li>
+            </NavLink>
 
+            {user && (
+                <>
+                    <NavLink
+                        to="/addvoluntieer"
+                        onClick={() => setShowDropdown(false)}
+                        className={({ isActive }) =>
+                            isActive
+                                ? 'bg-green-600 text-white px-3 py-2 rounded'
+                                : 'px-3 py-2'
+                        }
+                    >
+                        <li>Add Need Volunteer</li>
+                    </NavLink>
+
+                    {/* Dropdown for Manage Posts */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowDropdown(!showDropdown)}
+                            className={`px-3 py-2 rounded transition-all duration-300 ${showDropdown ? 'bg-green-700 text-white' : 'hover:bg-green-600 hover:text-white'
+                                }`}
+                        >
+                            Manage My Post ▾
+                        </button>
+
+                        {showDropdown && (
+                            <ul className="absolute bg-white text-black shadow-xl rounded-xl mt-2 z-50 w-60 border border-green-200">
+                                <li>
+                                    <NavLink
+                                        to="/my-need-posts"
+                                        onClick={() => setShowDropdown(false)}
+                                        className="block px-4 py-2 hover:bg-green-600 hover:text-white rounded-t-xl"
+                                    >
+                                        My Volunteer Need Post
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/my-request-posts"
+                                        onClick={() => setShowDropdown(false)}
+                                        className="block px-4 py-2 hover:bg-green-600 hover:text-white rounded-b-xl"
+                                    >
+                                        My Volunteer Request Post
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        )}
+                    </div>
+                </>
             )}
+        </>
+    );
 
-        </div>
-    </>;
 
     return (
         <div>
