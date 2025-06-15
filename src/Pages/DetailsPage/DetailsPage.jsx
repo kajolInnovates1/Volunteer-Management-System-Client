@@ -14,7 +14,9 @@ import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 
 const DetailsPage = () => {
-    const data = useLoaderData(); // dynamic data from loader
+    const data = useLoaderData();
+    console.log(data);
+    // dynamic data from loader
     const [showModal, setShowModal] = useState(false);
     const [userSuggestion, setUserSuggestion] = useState('');
     const { user } = useAuth();
@@ -43,86 +45,79 @@ const DetailsPage = () => {
         status,
         suggestion,
         thumbnail,
-        volunteer,
         volunteersNeeded,
         _id
     } = data;
 
+
     const playdata = {
         thumbnail: thumbnail,
-        title: postTitle,
+        postTitle: postTitle,
         description: description,
         category: category,
         location: location,
         deadline: deadline,
         volunteersNeeded: volunteersNeeded,
-        organizerName: organizer?.name,
-        organizerEmail: organizer?.email,
-        voluntieerEmail: user?.email,
-        voluntieerName: user?.displayName,
-        suggestion: userSuggestion,
-        status: "requested"
+        organizer: {
+            name: organizer?.name,
+            email: organizer?.email
+        },
+        volunteer: {
+            name: user?.displayName,
+            email: user?.email
+        },
+        suggestion: suggestion,
+        status: status,
+
     };
 
-    const handleRequest = async () => {
-        try {
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: "btn btn-success",
-                    cancelButton: "btn btn-danger"
-                },
-                buttonsStyling: false
-            });
 
-            const result = await swalWithBootstrapButtons.fire({
-                title: "Are you sure?",
-                text: "You won't be able to request this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, submit it!",
-                cancelButtonText: "No, cancel!",
-                reverseButtons: true
-            });
 
+    const handleRequest = () => {
+
+
+
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Requested Submitted!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then((result) => {
             if (result.isConfirmed) {
-                // Step 1: Decrease volunteer count
-                const response = await axios.patch(`http://localhost:3000/allvoluntier/${_id}`);
-
-                if (response.data.modifiedCount > 0) {
-                    // Step 2: Save request data
-                    await axios.post('http://localhost:3000/volunteerRequests', playdata);
-
-                    Swal.fire({
-                        title: "Request Submitted!",
-                        text: "Your volunteer request has been successfully submitted.",
-                        icon: "success"
-                    });
-
-                    setShowModal(false);
-                    navigate('/my-request-posts');
-                } else {
-                    Swal.fire({
-                        title: "Request Failed!",
-                        text: "Volunteer count update failed.",
-                        icon: "error"
-                    });
-                }
-            } else {
-                Swal.fire({
+                swalWithBootstrapButtons.fire({
+                    title: "Submited!",
+                    text: "Your Request has been Submitted.",
+                    icon: "success"
+                });
+                axios.patch(`http://localhost:3000/allvoluntier/${_id}`);
+                axios.post('http://localhost:3000/volunteerRequests', playdata);
+                navigate('/my-request-posts')
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
                     title: "Cancelled",
-                    text: "You cancelled the request.",
-                    icon: "info"
+                    text: "Your request has been Cancel",
+                    icon: "error"
                 });
             }
+        });
 
-        } catch (error) {
-            console.error('Error submitting volunteer request:', error);
-            Swal.fire({
-                title: "Error",
-                text: "Something went wrong. Please try again.",
-                icon: "error"
-            });
-        }
+
+
+
     };
 
 
