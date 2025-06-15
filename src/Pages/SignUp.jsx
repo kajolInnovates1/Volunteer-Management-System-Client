@@ -1,9 +1,12 @@
 import React from 'react';
 import useAuth from '../Hooks/useAuth';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const SignUp = () => {
     const { userSignUp, setUser, userUpdate, userSignInWithGoogle } = useAuth();
+    const navigate = useNavigate();
 
     const handleSignUp = e => {
         e.preventDefault();
@@ -11,11 +14,16 @@ const SignUp = () => {
         const formData = new FormData(form);
         const userData = Object.fromEntries(formData.entries());
         const { name, url, email, password } = userData;
+        const newData = {
+            displayName: name,
+            photoURL: url,
+            email: email
+        }
         const dataInfo = {
             displayName: name,
             photoURL: url
         }
-        console.log(dataInfo);
+
 
         userSignUp(email, password)
             .then(res => {
@@ -23,28 +31,121 @@ const SignUp = () => {
                 console.log(res.user);
                 userUpdate(dataInfo)
                     .then(() => {
-                        console.log('updateUser Succesfully');
-                        axios.post('http://localhost:3000/user', userData)
-                            .then(res => {
-                                console.log(res);
+
+                        axios.post('http://localhost:3000/user', newData)
+                            .then(resu => {
+                                if (resu) {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "success",
+                                        title: "Registration Succesfull",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+
+                                }
+
                             })
                             .catch(error => {
-                                console.log(error);
+                                if (error) {
+                                    Swal.fire({
+                                        position: "center",
+                                        icon: "warning",
+                                        title: "Registration Failed",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+
+
+                                }
                             })
+
+
                     })
-                    .catch(error => console.log(error));
+                    .catch(errorr => {
+                        if (errorr) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "warning",
+                                title: "Registration Failed",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                        }
+
+
+                    });
+                if (res.user) {
+                    navigate('/');
+
+                }
             })
-            .catch(error => console.log(error));
+            .catch(errors => {
+                if (errors) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: "Registration Failed",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+
+            });
     }
     const handleGoogle = () => {
         userSignInWithGoogle()
             .then(result => {
-                alert('user successfull');
-                console.log(result);
+                const newData = {
+                    displayName: result.user.displayName,
+                    email: result.user.email,
+                    photoURL: result.user.photoURL
+                }
+                axios.post('http://localhost:3000/user', newData)
+                    .then(resu => {
+                        if (resu) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "Registration Succesfull",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                        }
+
+                    })
+                    .catch(error => {
+                        if (error) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "warning",
+                                title: "Registration Failed",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+
+                        }
+                    })
+                if (result.user) {
+                    navigate('/');
+
+                }
+
 
             })
             .catch(error => {
-                alert(error);
+                if (error) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: "Registration Failed",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
             })
 
     }

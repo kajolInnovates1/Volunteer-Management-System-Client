@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
         setLoading(true);
         return createUserWithEmailAndPassword(auth, email, password);
     }
-    const userSign = (email, password) => {
+    const userSignIn = (email, password) => {
         setLoading(true);
         return signInWithEmailAndPassword(auth, email, password);
     }
@@ -42,7 +42,7 @@ const AuthProvider = ({ children }) => {
     }, [])
     const userInfo = {
         userSignUp,
-        userSign,
+        userSignIn,
         logout,
         userUpdate,
         user,

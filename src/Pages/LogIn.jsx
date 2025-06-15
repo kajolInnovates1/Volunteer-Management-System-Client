@@ -1,31 +1,107 @@
 import React from 'react';
 import useAuth from '../Hooks/useAuth';
+import Swal from 'sweetalert2';
+import { useLocation, useNavigate } from 'react-router';
+import axios from 'axios';
 
 const LogIn = () => {
     const { userSignIn, setUser, userSignInWithGoogle } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from || '/';
     const handleSignIn = e => {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
         const userData = Object.fromEntries(formData.entries());
         const { email, password } = userData;
+        console.log(email, password);
         userSignIn(email, password)
             .then(res => {
-                setUser(res.user);
+                if (res.user) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Login Succesfull",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    navigate(from);
+
+
+
+                }
+
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                if (error) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: "Login Failed",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            }
+
+            );
 
 
     }
     const handleGoogle = () => {
         userSignInWithGoogle()
             .then(result => {
-                alert('user successfull');
-                console.log(result);
+                const newData = {
+                    displayName: result.user.displayName,
+                    email: result.user.email,
+                    photoURL: result.user.photoURL
+                }
+                axios.post('http://localhost:3000/user', newData)
+                    .then(resu => {
+                        if (resu) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "Registration Succesfull",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                        }
+
+                    })
+                    .catch(error => {
+                        if (error) {
+                            Swal.fire({
+                                position: "center",
+                                icon: "warning",
+                                title: "Registration Failed",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+
+                        }
+                    })
+                if (result.user) {
+                    navigate(from);
+
+                }
+
 
             })
             .catch(error => {
-                alert(error);
+                if (error) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: "Registration Failed",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
             })
 
     }
