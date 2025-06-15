@@ -1,0 +1,87 @@
+import React, { useState } from 'react';
+import Swal from 'sweetalert2';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+const categories = ['Healthcare', 'Education', 'Social Service', 'Animal Welfare'];
+
+const UpdateModal = ({ post, onClose, onUpdated }) => {
+    const [formData, setFormData] = useState({
+        ...post,
+        deadline: new Date(post.deadline)
+    });
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleDateChange = date => {
+        setFormData(prev => ({ ...prev, deadline: date }));
+    };
+
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        const updatedPost = {
+            ...formData,
+            deadline: formData.deadline.toISOString().split('T')[0]
+        };
+
+        fetch(`http://localhost:3000/volunteerNeeds/${post._id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedPost)
+        })
+            .then(res => res.json())
+            .then(() => {
+                Swal.fire('Updated!', 'Volunteer post updated successfully.', 'success');
+                onClose();
+                onUpdated();
+            });
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl relative">
+                <h3 className="text-2xl font-bold mb-4 text-center text-green-700">Update Volunteer Post</h3>
+
+                <label>Thumbnail</label>
+                <input type="text" name="thumbnail" value={formData.thumbnail} onChange={handleChange} className="input input-bordered w-full mb-3" />
+
+                <label>Post Title</label>
+                <input type="text" name="title" value={formData.title} onChange={handleChange} className="input input-bordered w-full mb-3" />
+
+                <label>Description</label>
+                <textarea name="description" value={formData.description} onChange={handleChange} className="textarea textarea-bordered w-full mb-3" />
+
+                <label>Category</label>
+                <select name="category" value={formData.category} onChange={handleChange} className="select select-bordered w-full mb-3">
+                    {categories.map(cat => <option key={cat}>{cat}</option>)}
+                </select>
+
+                <label>Location</label>
+                <input type="text" name="location" value={formData.location} onChange={handleChange} className="input input-bordered w-full mb-3" />
+
+                <label>Volunteers Needed</label>
+                <input type="number" name="volunteersNeeded" value={formData.volunteersNeeded} onChange={handleChange} className="input input-bordered w-full mb-3" />
+
+                <label>Deadline</label>
+                <DatePicker selected={formData.deadline} onChange={handleDateChange} className="input input-bordered w-full mb-3" />
+
+                <label>Organizer Name</label>
+                <input type="text" value={formData.organizerName} readOnly className="input input-bordered w-full mb-3 bg-gray-100" />
+
+                <label>Organizer Email</label>
+                <input type="email" value={formData.organizerEmail} readOnly className="input input-bordered w-full mb-3 bg-gray-100" />
+
+                <div className="flex justify-end space-x-3">
+                    <button type="submit" className="btn btn-success">Update Post</button>
+                    <button type="button" onClick={onClose} className="btn btn-outline btn-error">Cancel</button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default UpdateModal;

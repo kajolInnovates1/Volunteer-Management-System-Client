@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { FaTimesCircle } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import useAuth from '../../Hooks/useAuth';
 
 const MyVolunteerReqPost = () => {
     const [reqDatas, setReqData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
 
     useEffect(() => {
-        fetch('http://localhost:3000/volunteerRequests?email=mdraselislamkajol201@gmail.com')
+        fetch(`http://localhost:3000/volunteerRequests?email=${user.email}`)
             .then(res => res.json())
             .then(datas => {
                 setReqData(datas);
