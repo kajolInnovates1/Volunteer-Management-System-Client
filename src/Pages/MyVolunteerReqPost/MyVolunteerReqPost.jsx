@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaTimesCircle } from 'react-icons/fa';
+import { FaHandsHelping, FaTimesCircle } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import useAuth from '../../Hooks/useAuth';
 
@@ -9,7 +9,7 @@ const MyVolunteerReqPost = () => {
     const { user } = useAuth();
 
     useEffect(() => {
-        fetch(`http://localhost:3000/volunteerRequests?email=${user.email}`)
+        fetch(`http://localhost:3000/volunteerRequests?email=${user?.email}`)
             .then(res => res.json())
             .then(datas => {
                 setReqData(datas);
@@ -49,13 +49,22 @@ const MyVolunteerReqPost = () => {
     if (loading) return <p className="text-center mt-10 text-lg text-gray-600">Loading your requests...</p>;
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6 min-h-[calc(100vh-290px)]">
             <h2 className="text-3xl font-bold text-center mb-8 text-green-700">My Volunteer Requests</h2>
 
             {reqDatas.length === 0 ? (
-                <div className="text-center mt-10 p-6 bg-yellow-50 border border-yellow-300 text-yellow-800 rounded-xl shadow-lg">
-                    <h3 className="text-2xl font-semibold">No Requests Found</h3>
-                    <p className="text-sm mt-2">You haven’t submitted any volunteer requests yet. Join a cause today!</p>
+                <div className="flex flex-col items-center justify-center h-[70vh] text-center px-6">
+                    <FaHandsHelping className="text-6xl text-green-500 mb-5 animate-bounce" />
+                    <h2 className="text-3xl font-bold text-gray-700 mb-3">No Volunteer Requests Yet</h2>
+                    <p className="text-gray-500 mb-6 text-lg max-w-md">
+                        You haven't requested to be a volunteer for any campaign. Start making a difference by joining a cause you care about.
+                    </p>
+                    <button
+                        onClick={() => window.location.href = '/'}
+                        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 shadow-xl"
+                    >
+                        Explore Volunteer Posts
+                    </button>
                 </div>
             ) : (
                 <div className="overflow-x-auto shadow-md rounded-xl border border-gray-200">

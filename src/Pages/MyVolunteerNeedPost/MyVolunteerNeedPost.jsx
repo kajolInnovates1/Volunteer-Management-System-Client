@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import UpdateModal from './UpdateModal';
 import useAuth from '../../Hooks/useAuth';
+import { FaInbox } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
 
 const MyVolunteerNeedPosts = () => {
     const { user } = useAuth();
     const [myPosts, setMyPosts] = useState([]);
     const [selectedPost, setSelectedPost] = useState(null);
+    const navigate = useNavigate();
 
     const fetchPosts = () => {
-        fetch(`http://localhost:3000/needvoluntier?email=${user.email}`)
+        fetch(`http://localhost:3000/needvoluntier?email=${user?.email}`)
             .then(res => res.json())
             .then(data => setMyPosts(data));
     };
@@ -42,11 +45,21 @@ const MyVolunteerNeedPosts = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 min-h-[calc(100vh-290px)]">
             <h2 className="text-2xl font-bold mb-4 text-center text-green-700">My Volunteer Need Posts</h2>
 
             {myPosts.length === 0 ? (
-                <p className="text-center text-gray-500">You haven’t added any volunteer post yet.</p>
+                <div className="flex flex-col items-center justify-center h-[60vh] text-center px-4">
+                    <FaInbox className="text-6xl text-green-400 mb-4 animate-pulse" />
+                    <h2 className="text-2xl font-bold text-gray-700 mb-2">Nothing Here Yet</h2>
+                    <p className="text-gray-500 mb-4"></p>
+                    <button
+                        onClick={() => navigate('/addvoluntieer')}
+                        className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-xl transition-all duration-300 shadow-lg"
+                    >
+                        Create a New Post
+                    </button>
+                </div>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="min-w-full border shadow-xl rounded-xl">
