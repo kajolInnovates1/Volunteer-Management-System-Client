@@ -1,10 +1,13 @@
 import React from 'react';
 import useAuth from '../../Hooks/useAuth';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
 
 const AddNeedVoluntieer = () => {
     const { user } = useAuth();
     const useremail = user?.email;
+    const navigate = useNavigate();
     const userdisplayName = user?.displayName;
     const handleSubmit = e => {
         e.preventDefault();
@@ -22,7 +25,39 @@ const AddNeedVoluntieer = () => {
         console.log(newData);
 
         axios.post('http://localhost:3000/addvoluntieer', newData)
-            .then(res => console.log(res));
+            .then(res => {
+                if (res) {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Added volunteer needed Post!",
+                        html: "Please Wait <b></b> milliseconds.",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading();
+                            const timer = Swal.getPopup().querySelector("b");
+                            timerInterval = setInterval(() => {
+                                timer.textContent = `${Swal.getTimerLeft()}`;
+                            }, 100);
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log("I was closed by the timer");
+                        }
+                    });
+
+                    setTimeout(() => {
+                        navigate('/my-need-posts'); // replace '/your-route' with your actual path
+                    }, 2500);
+
+
+
+                }
+            });
 
 
 
