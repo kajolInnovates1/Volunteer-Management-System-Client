@@ -92,11 +92,13 @@ const MyVolunteerNeedPosts = () => {
             )}
 
             {selectedPost && (
-                <UpdateModal
-                    post={selectedPost}
-                    onClose={() => setSelectedPost(null)}
-                    onUpdated={fetchPosts}
-                />
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <UpdateModal
+                        post={selectedPost}
+                        onClose={() => setSelectedPost(null)}
+                        onUpdated={fetchPosts}
+                    />
+                </div>
             )}
         </div>
     );

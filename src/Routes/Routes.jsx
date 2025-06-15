@@ -11,6 +11,7 @@ import DetailsPage from "../Pages/DetailsPage/DetailsPage";
 import AddNeedVoluntieer from "../Pages/AddNeedVoluntieer/AddNeedVoluntieer";
 import MyVolunteerNeedPost from "../Pages/MyVolunteerNeedPost/MyVolunteerNeedPost";
 import MyVolunteerReqPost from "../Pages/MyVolunteerReqPost/MyVolunteerReqPost";
+import UpdateModal from "../Pages/MyVolunteerNeedPost/UpdateModal";
 
 
 export const router = createBrowserRouter([
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
             {
                 path: '/my-request-posts',
                 Component: MyVolunteerReqPost
+            },
+            {
+                path: '/updatemodal',
+                Component: UpdateModal
             }
         ]
     },
