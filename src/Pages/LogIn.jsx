@@ -1,7 +1,7 @@
 import React from 'react';
 import useAuth from '../Hooks/useAuth';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import axios from 'axios';
 
 const LogIn = () => {
@@ -15,7 +15,6 @@ const LogIn = () => {
         const formData = new FormData(form);
         const userData = Object.fromEntries(formData.entries());
         const { email, password } = userData;
-        console.log(email, password);
         userSignIn(email, password)
             .then(res => {
                 if (res.user) {
@@ -120,6 +119,7 @@ const LogIn = () => {
                                     <input type="password" name='password' className="input" placeholder="Password" />
                                     <div><a className="link link-hover">Forgot password?</a></div>
                                     <button className="btn bg-[#132182] text-white mt-4">Sign In</button>
+                                    <p className='text-xl text-green-600 mt-2'>First Time this site Please <Link to={'/signup'} className='underline text-blue-500'>SignUp</Link></p>
                                 </fieldset>
                                 <div className="divider">OR</div>
                                 <div>

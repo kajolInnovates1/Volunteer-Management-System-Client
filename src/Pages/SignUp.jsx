@@ -2,7 +2,7 @@ import React from 'react';
 import useAuth from '../Hooks/useAuth';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const SignUp = () => {
     const { userSignUp, setUser, userUpdate, userSignInWithGoogle } = useAuth();
@@ -28,7 +28,6 @@ const SignUp = () => {
         userSignUp(email, password)
             .then(res => {
                 setUser(res.user);
-                console.log(res.user);
                 userUpdate(dataInfo)
                     .then(() => {
 
@@ -170,6 +169,8 @@ const SignUp = () => {
                                     <input type="password" name='password' className="input" placeholder="Password" />
                                     <div><a className="link link-hover">Forgot password?</a></div>
                                     <button className="btn bg-[#132182] text-white mt-4">Sign Up</button>
+                                    <p className='text-xl text-green-600 mt-2'>Allready have an Account please! <Link to={'/login'} className='underline text-blue-500'>Log In</Link></p>
+
                                 </fieldset>
                                 <div className="divider">OR</div>
                                 <div>

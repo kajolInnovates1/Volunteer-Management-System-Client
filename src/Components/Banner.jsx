@@ -6,7 +6,7 @@ const Banner = () => {
             <div className="carousel w-full">
                 <div id="item1" className="carousel-item w-full">
                     <img
-                        src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
+                        src=""
                         className="w-full" />
                 </div>
                 <div id="item2" className="carousel-item w-full">

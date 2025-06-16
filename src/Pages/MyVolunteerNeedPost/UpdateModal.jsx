@@ -2,51 +2,17 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import useAuth from '../../Hooks/useAuth';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const categories = ['Healthcare', 'Education', 'Social Service', 'Animal Welfare'];
 
 const UpdateModal = ({ post, onClose, onUpdated }) => {
-    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
 
-
-    // : 
-    // "Social Service"
-
-    // : 
-    // "2025-06-22"
-
-    // : 
-    // "Help us plant 500 trees across Uttara to build a greener future."
-
-    // : 
-    // "Uttara, Dhaka"
-
-    // : 
-    // {name: 'Md Kajol Islam', email: 'mdkajolislam@gmail.com'}
-
-    // : 
-    // "Tree Plantation Campaign"
-    // status
-    // : 
-    // "requested"
-    // suggestion
-    // : 
-    // "query off date"
-
-    // : 
-    // "https://i.ibb.co/rfyLdPWC/v2.jpg"
-
-    // : 
-    // "14"
-    // _id
-    // : 
-    // "684e81443e3b00298a7a2143"
-
+    // Initialize formData state from post prop
     const [formData, setFormData] = useState({
-        ...post
+        ...post,
     });
-    console.log(post);
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -57,44 +23,49 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
         setFormData(prev => ({ ...prev, deadline: date }));
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
         const form = e.target;
         const toForm = new FormData(form);
         const data = Object.fromEntries(toForm.entries());
 
-        // organizer nested object banai
+        // organizer nested object বানানো
         data.organizer = {
             name: formData.organizer?.name || '',
             email: formData.organizer?.email || ''
         };
 
-        // Extra unnecessary field delete
+        // Unnecessary field remove
         delete data.name;
         delete data.email;
 
-        // fix deadline
-        data.deadline = formData.deadline;
+        // deadline, suggestion, status fix
+        data.deadline = formData.deadline instanceof Date
+            ? formData.deadline.toISOString().split('T')[0] // format as 'yyyy-mm-dd' string
+            : formData.deadline;
 
-        // include suggestion and status
         data.status = formData.status;
         data.suggestion = formData.suggestion;
 
-        // volunteersNeeded field should be number
-        data.volunteersNeeded = parseInt(data.volunteersNeeded);
+        // volunteersNeeded string → number, fallback to 0 if invalid
+        data.volunteersNeeded = parseInt(data.volunteersNeeded) || 0;
 
-        fetch(`http://localhost:3000/volunteerNeeds/${post._id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        })
-            .then(res => res.json())
-            .then(() => {
-                Swal.fire('Updated!', 'Volunteer post updated successfully.', 'success');
+        try {
+            const res = await axiosSecure.put(`/volunteerNeeds/${post._id}`, data);
+
+            if (res.status === 200 && (res.data.modifiedCount > 0 || res.data.acknowledged)) {
+                await Swal.fire('Updated!', 'Volunteer post updated successfully.', 'success');
                 onClose();
-                onUpdated(); // refresh parent list
-            });
+                onUpdated();
+            } else {
+                Swal.fire('No Change', 'No fields were updated.', 'info');
+            }
+        } catch (error) {
+            console.error('Update failed:', error);
+            Swal.fire('Error!', error?.response?.data?.message || 'Something went wrong.', 'error');
+        }
     };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl relative">
@@ -104,7 +75,7 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                 <input
                     type="text"
                     name="thumbnail"
-                    value={formData.thumbnail}
+                    value={formData.thumbnail || ''}
                     onChange={handleChange}
                     className="input input-bordered w-full mb-3"
                 />
@@ -113,7 +84,7 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                 <input
                     type="text"
                     name="postTitle"
-                    value={formData.postTitle}
+                    value={formData.postTitle || ''}
                     onChange={handleChange}
                     className="input input-bordered w-full mb-3"
                 />
@@ -121,7 +92,7 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                 <label>Description</label>
                 <textarea
                     name="description"
-                    value={formData.description}
+                    value={formData.description || ''}
                     onChange={handleChange}
                     className="textarea textarea-bordered w-full mb-3"
                 />
@@ -129,7 +100,7 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                 <label>Category</label>
                 <select
                     name="category"
-                    value={formData.category}
+                    value={formData.category || ''}
                     onChange={handleChange}
                     className="select select-bordered w-full mb-3"
                 >
@@ -144,7 +115,7 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                 <input
                     type="text"
                     name="location"
-                    value={formData.location}
+                    value={formData.location || ''}
                     onChange={handleChange}
                     className="input input-bordered w-full mb-3"
                 />
@@ -153,14 +124,15 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                 <input
                     type="number"
                     name="volunteersNeeded"
-                    value={formData.volunteersNeeded}
+                    value={formData.volunteersNeeded || ''}
                     onChange={handleChange}
                     className="input input-bordered w-full mb-3"
+                    min={0}
                 />
 
                 <label>Deadline</label>
                 <DatePicker
-                    selected={formData.deadline}
+                    selected={formData.deadline ? new Date(formData.deadline) : null}
                     onChange={handleDateChange}
                     name='deadline'
                     className="input input-bordered w-full mb-3"
@@ -172,8 +144,8 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                     type="text"
                     name='name'
                     value={formData.organizer?.name || ''}
-
-                    className="input input-bordered w-full mb-3 bg-gray-100"
+                    readOnly
+                    className="input input-bordered w-full mb-3 bg-gray-100 cursor-not-allowed"
                 />
 
                 <label>Organizer Email</label>
@@ -181,8 +153,8 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
                     type="email"
                     name='email'
                     value={formData.organizer?.email || ''}
-
-                    className="input input-bordered w-full mb-3 bg-gray-100"
+                    readOnly
+                    className="input input-bordered w-full mb-3 bg-gray-100 cursor-not-allowed"
                 />
 
                 <div className="flex justify-end space-x-3">

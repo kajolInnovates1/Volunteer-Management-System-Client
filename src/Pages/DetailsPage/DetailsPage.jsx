@@ -9,21 +9,30 @@ import {
     FaUsers,
     FaTimes,
 } from 'react-icons/fa';
-import axios from 'axios';
+
 import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const DetailsPage = () => {
     const data = useLoaderData();
-    console.log(data);
     // dynamic data from loader
     const [showModal, setShowModal] = useState(false);
     const [userSuggestion, setUserSuggestion] = useState('');
     const { user } = useAuth();
     const navigate = useNavigate();
     const locationn = useLocation();
+    const axiosSecure = useAxiosSecure();
 
     const handlebeClick = () => {
+        if (data.volunteersNeeded <= 0) {
+            return Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "You Can not added Because Volunteer will be 0!",
+                footer: '<a href="#">Why do I have this issue?</a>'
+            });
+        }
         if (!user) {
 
             navigate('/login', { state: { from: locationn.pathname } });
@@ -100,8 +109,8 @@ const DetailsPage = () => {
                     text: "Your Request has been Submitted.",
                     icon: "success"
                 });
-                axios.patch(`http://localhost:3000/allvoluntier/${_id}`);
-                axios.post('http://localhost:3000/volunteerRequests', playdata);
+                axiosSecure.patch(`http://localhost:3000/allvoluntier/${_id}`);
+                axiosSecure.post('http://localhost:3000/volunteerRequests', playdata);
                 navigate('/my-request-posts')
             } else if (
                 /* Read more about handling dismissals below */

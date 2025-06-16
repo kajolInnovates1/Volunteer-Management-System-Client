@@ -12,12 +12,14 @@ import AddNeedVoluntieer from "../Pages/AddNeedVoluntieer/AddNeedVoluntieer";
 import MyVolunteerNeedPost from "../Pages/MyVolunteerNeedPost/MyVolunteerNeedPost";
 import MyVolunteerReqPost from "../Pages/MyVolunteerReqPost/MyVolunteerReqPost";
 import UpdateModal from "../Pages/MyVolunteerNeedPost/UpdateModal";
+import ErrorPage from "../Components/ErrorPage/ErrorPage";
 
 
 export const router = createBrowserRouter([
     {
         path: "/",
         Component: Layouts,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 index: true,
@@ -55,6 +57,10 @@ export const router = createBrowserRouter([
             {
                 path: '/updatemodal',
                 Component: UpdateModal
+            },
+            {
+                path: '/*',
+                Component: ErrorPage
             }
         ]
     },

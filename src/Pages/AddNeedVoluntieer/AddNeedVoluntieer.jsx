@@ -3,12 +3,14 @@ import useAuth from '../../Hooks/useAuth';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const AddNeedVoluntieer = () => {
     const { user } = useAuth();
     const useremail = user?.email;
     const navigate = useNavigate();
     const userdisplayName = user?.displayName;
+    const axiosSecure = useAxiosSecure();
     const handleSubmit = e => {
         e.preventDefault();
         const form = e.target;
@@ -22,9 +24,9 @@ const AddNeedVoluntieer = () => {
             email: email
         };
 
-        console.log(newData);
 
-        axios.post('http://localhost:3000/addvoluntieer', newData)
+
+        axiosSecure.post('/addvoluntieer', newData)
             .then(res => {
                 if (res) {
                     let timerInterval;
@@ -45,9 +47,7 @@ const AddNeedVoluntieer = () => {
                         }
                     }).then((result) => {
                         /* Read more about handling dismissals below */
-                        if (result.dismiss === Swal.DismissReason.timer) {
-                            console.log("I was closed by the timer");
-                        }
+
                     });
 
                     setTimeout(() => {
@@ -65,7 +65,7 @@ const AddNeedVoluntieer = () => {
 
     }
     return (
-        <div className='min-h-[calc(100vh-290px)]'>
+        <div className='min-h-[calc(100vh-290px)] px-8'>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-2xl shadow-xl">
 
                 {/* Thumbnail URL */}

@@ -3,9 +3,44 @@ import { NavLink } from 'react-router';
 
 const Footer = () => {
     const Links = <>
-        <NavLink to="/"> Home</NavLink>
-        <NavLink to="/"> All Post</NavLink>
-        <NavLink to="/"> My Post</NavLink>
+
+        <NavLink
+            to="/"
+            className={({ isActive }) =>
+                isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'
+            }
+        >
+            Home
+        </NavLink>
+        <NavLink
+            to="/allneedpost"
+            className={({ isActive }) =>
+                isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'
+            }
+        >
+            All need Post
+        </NavLink>
+        <NavLink
+            to="/my-need-posts"
+            className={({ isActive }) =>
+                isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'
+            }
+        >
+            My need post
+
+        </NavLink>
+        <NavLink
+            to="/my-request-posts"
+            className={({ isActive }) =>
+                isActive ? 'bg-green-600 text-white px-3 py-2 rounded' : 'px-3 py-2'
+            }
+        >
+            My request post
+        </NavLink>
+
+
+
+
     </>
 
     return (
