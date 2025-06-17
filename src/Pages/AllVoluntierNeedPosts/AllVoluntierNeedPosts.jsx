@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import VoluntierSingle from '../../Components/VoluntierNeedNow/VoluntierSingle';
+import { useTheme } from '../../AuthProvider/ThemeProvider';
 
 const AllVoluntierNeedPosts = () => {
     const [vdatas, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchInput, setSearchInput] = useState('');
     const [query, setQuery] = useState(''); // search query
+    const { theme, toggleTheme } = useTheme();
+
 
 
     useEffect(() => {
@@ -13,8 +16,8 @@ const AllVoluntierNeedPosts = () => {
             setLoading(true);
             try {
                 const url = query
-                    ? `http://localhost:3000/allvoluntier?search=${encodeURIComponent(query)}`
-                    : 'http://localhost:3000/allvoluntier';
+                    ? `https://my-awesomeapp-2025.vercel.app/allvoluntier?search=${encodeURIComponent(query)}`
+                    : 'https://my-awesomeapp-2025.vercel.app/allvoluntier';
 
                 const res = await fetch(url);
                 const data = await res.json();
@@ -34,7 +37,7 @@ const AllVoluntierNeedPosts = () => {
     };
 
     return (
-        <div className="min-h-[calc(100vh-290px)] px-8 py-10">
+        <div className={`min-h-[calc(100vh-290px)] px-8 py-10 max-w-5xl mx-auto my-10 p-6 bg-white shadow-xl rounded-2xl border border-gray-200 ${theme === 'light' ? 'bg-gray-500 text-white' : ''}`}>
             {/* Search Input and Button */}
             <div className="mb-8 max-w-xl mx-auto flex gap-2">
                 <input

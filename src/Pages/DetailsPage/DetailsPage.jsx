@@ -13,8 +13,10 @@ import {
 import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import { useTheme } from '../../AuthProvider/ThemeProvider';
 
 const DetailsPage = () => {
+    const { theme, toggleTheme } = useTheme();
     const data = useLoaderData();
     // dynamic data from loader
     const [showModal, setShowModal] = useState(false);
@@ -109,8 +111,8 @@ const DetailsPage = () => {
                     text: "Your Request has been Submitted.",
                     icon: "success"
                 });
-                axiosSecure.patch(`http://localhost:3000/allvoluntier/${_id}`);
-                axiosSecure.post('http://localhost:3000/volunteerRequests', playdata);
+                axiosSecure.patch(`https://my-awesomeapp-2025.vercel.app/allvoluntier/${_id}`);
+                axiosSecure.post('https://my-awesomeapp-2025.vercel.app/volunteerRequests', playdata);
                 navigate('/my-request-posts')
             } else if (
                 /* Read more about handling dismissals below */
@@ -131,7 +133,7 @@ const DetailsPage = () => {
 
 
     return (
-        <div className="max-w-5xl mx-auto my-10 p-6 bg-white shadow-xl rounded-2xl border border-gray-200">
+        <div className={`max-w-5xl mx-auto my-10 p-6 bg-white shadow-xl rounded-2xl border border-gray-200 ${theme === 'light' ? 'bg-gray-500 text-white' : ''}`}>
             <img
                 src={thumbnail || 'https://i.ibb.co/7V2zpXP/volunteer-cleanup.jpg'}
                 alt={postTitle || 'Volunteer Post'}

@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/detailspage/:id',
-                loader: ({ params }) => fetch(`http://localhost:3000/allvoluntier/${params.id}`),
+                loader: ({ params }) => fetch(`https://my-awesomeapp-2025.vercel.app/allvoluntier/${params.id}`),
                 Component: DetailsPage
             },
             {

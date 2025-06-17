@@ -29,25 +29,28 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
         const toForm = new FormData(form);
         const data = Object.fromEntries(toForm.entries());
 
-        // organizer nested object বানানো
+        // organizer nested object আলাদা করে বসাও
         data.organizer = {
             name: formData.organizer?.name || '',
             email: formData.organizer?.email || ''
         };
 
-        // Unnecessary field remove
+        // name ও email ফিল্ড সরিয়ে দাও যেহেতু readOnly
         delete data.name;
         delete data.email;
 
-        // deadline, suggestion, status fix
-        data.deadline = formData.deadline instanceof Date
-            ? formData.deadline.toISOString().split('T')[0] // format as 'yyyy-mm-dd' string
-            : formData.deadline;
+        // date formatting ঠিক করে নিও
+        if (formData.deadline instanceof Date) {
+            data.deadline = formData.deadline.toISOString().split('T')[0];
+        } else {
+            data.deadline = formData.deadline;  // যদি string হয়ে থাকে
+        }
 
-        data.status = formData.status;
-        data.suggestion = formData.suggestion;
+        // অন্য কিছু ফিল্ড সরাসরি formData থেকে নেয়া ভালো
+        data.status = formData.status || 'pending';  // example default
+        data.suggestion = formData.suggestion || '';
 
-        // volunteersNeeded string → number, fallback to 0 if invalid
+        // volunteersNeeded string → number (fallback 0)
         data.volunteersNeeded = parseInt(data.volunteersNeeded) || 0;
 
         try {
@@ -65,6 +68,7 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
             Swal.fire('Error!', error?.response?.data?.message || 'Something went wrong.', 'error');
         }
     };
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center">

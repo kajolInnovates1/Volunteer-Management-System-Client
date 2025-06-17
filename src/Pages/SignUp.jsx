@@ -31,7 +31,7 @@ const SignUp = () => {
                 userUpdate(dataInfo)
                     .then(() => {
 
-                        axios.post('http://localhost:3000/user', newData)
+                        axios.post('https://my-awesomeapp-2025.vercel.app/user', newData)
                             .then(resu => {
                                 if (resu) {
                                     Swal.fire({
@@ -101,7 +101,7 @@ const SignUp = () => {
                     email: result.user.email,
                     photoURL: result.user.photoURL
                 }
-                axios.post('http://localhost:3000/user', newData)
+                axios.post('https://my-awesomeapp-2025.vercel.app/user', newData)
                     .then(resu => {
                         if (resu) {
                             Swal.fire({

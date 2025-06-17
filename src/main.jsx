@@ -11,10 +11,12 @@ import AuthProvider from './AuthProvider/AuthProvider.jsx';
 import { ThemeProvider } from './AuthProvider/ThemeProvider.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <ThemeProvider>
 
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ThemeProvider>
 
   </StrictMode>,
 )

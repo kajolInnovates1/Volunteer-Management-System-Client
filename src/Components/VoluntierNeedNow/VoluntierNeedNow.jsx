@@ -7,7 +7,7 @@ const VoluntierNeedNow = () => {
     const [vdatas, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/voluntierneednow',)
+        fetch('https://my-awesomeapp-2025.vercel.app/voluntierneednow',)
             .then(res => res.json())
             .then(data => {
                 const remainingData = data.slice(0, 6);

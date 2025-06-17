@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import axios from 'axios';
 
 const LogIn = () => {
-    const { userSignIn, setUser, userSignInWithGoogle } = useAuth();
+    const { userSignIn, userSignInWithGoogle } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from || '/';
@@ -57,7 +57,7 @@ const LogIn = () => {
                     email: result.user.email,
                     photoURL: result.user.photoURL
                 }
-                axios.post('http://localhost:3000/user', newData)
+                axios.post('https://my-awesomeapp-2025.vercel.app/user', newData)
                     .then(resu => {
                         if (resu) {
                             Swal.fire({
