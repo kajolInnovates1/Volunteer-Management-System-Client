@@ -3,7 +3,8 @@ import React from 'react';
 import useAuth from './useAuth';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://my-awesomeapp-2025.vercel.app'
+    baseURL: 'https://my-awesomeapp-2025.vercel.app',
+    // withCredentials: true
 
 })
 
@@ -11,8 +12,10 @@ const axiosInstance = axios.create({
 
 const useAxiosSecure = () => {
     const { user, logout } = useAuth();
+
     axiosInstance.interceptors.request.use(config => {
-        config.headers.Authorization = ` Bearer ${user?.accessToken}`
+        console.log(user.accessToken);
+        config.headers.Authorization = `Bearer ${user?.accessToken}`
         return config;
     })
     axiosInstance.interceptors.response.use(response => {
@@ -27,6 +30,8 @@ const useAxiosSecure = () => {
                 .catch(err => {
                     alert(err);
                 })
+            alert('403 ');
+
         }
     }
     )

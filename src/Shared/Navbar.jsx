@@ -8,7 +8,6 @@ import { useTheme } from '../AuthProvider/ThemeProvider';
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
-    console.log(theme, toggleTheme);
     const { user, setUser, logout } = useAuth();
     const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 

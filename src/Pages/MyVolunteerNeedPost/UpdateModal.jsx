@@ -55,8 +55,9 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
 
         try {
             const res = await axiosSecure.put(`/volunteerNeeds/${post._id}`, data);
+            console.log(res);
 
-            if (res.status === 200 && (res.data.modifiedCount > 0 || res.data.acknowledged)) {
+            if (res.status === 200) {
                 await Swal.fire('Updated!', 'Volunteer post updated successfully.', 'success');
                 onClose();
                 onUpdated();
