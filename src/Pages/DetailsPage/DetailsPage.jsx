@@ -14,6 +14,7 @@ import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useTheme } from '../../AuthProvider/ThemeProvider';
+import axios from 'axios';
 
 const DetailsPage = () => {
     const { theme, toggleTheme } = useTheme();

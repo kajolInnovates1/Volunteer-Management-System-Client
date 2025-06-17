@@ -28,34 +28,33 @@ const UpdateModal = ({ post, onClose, onUpdated }) => {
         const form = e.target;
         const toForm = new FormData(form);
         const data = Object.fromEntries(toForm.entries());
-
-        // organizer nested object আলাদা করে বসাও
-        data.organizer = {
+        data.organizer =
+        {
             name: formData.organizer?.name || '',
             email: formData.organizer?.email || ''
         };
 
-        // name ও email ফিল্ড সরিয়ে দাও যেহেতু readOnly
+
         delete data.name;
         delete data.email;
 
-        // date formatting ঠিক করে নিও
+
         if (formData.deadline instanceof Date) {
             data.deadline = formData.deadline.toISOString().split('T')[0];
         } else {
-            data.deadline = formData.deadline;  // যদি string হয়ে থাকে
+            data.deadline = formData.deadline;
         }
 
-        // অন্য কিছু ফিল্ড সরাসরি formData থেকে নেয়া ভালো
-        data.status = formData.status || 'pending';  // example default
+
+        data.status = formData.status || 'pending';
         data.suggestion = formData.suggestion || '';
 
-        // volunteersNeeded string → number (fallback 0)
+
         data.volunteersNeeded = parseInt(data.volunteersNeeded) || 0;
 
         try {
             const res = await axiosSecure.put(`/volunteerNeeds/${post._id}`, data);
-            console.log(res);
+
 
             if (res.status === 200) {
                 await Swal.fire('Updated!', 'Volunteer post updated successfully.', 'success');
