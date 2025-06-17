@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import VoluntierSingle from './VoluntierSingle';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { Link } from 'react-router';
 
 
 const VoluntierNeedNow = () => {
@@ -35,6 +36,12 @@ const VoluntierNeedNow = () => {
                     {
                         vdatas.map(singledata => <VoluntierSingle key={singledata._id} singledata={singledata}></VoluntierSingle>)
                     }
+
+                    <div className='flex justify-center'>
+                        <Link to={'/allneedpost'}>
+                            <button className='btn bg-green-600 text-white'>See All</button>
+                        </Link>
+                    </div>
                 </div>
 
             )}
