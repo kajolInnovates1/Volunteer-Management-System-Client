@@ -80,7 +80,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <div className={`navbar bg-base-100 shadow-sm ${theme === 'light' ? 'bg-gray-500 text-white' : ''}`}>
+            <div className={`navbar bg-base-100 shadow-sm ${theme === 'light' ? 'bg-gray-500 text-white' : ''} fixed z-10 top-0`}>
                 <div className="navbar-start">
                     <Tooltip id="my-tooltip" />
 
